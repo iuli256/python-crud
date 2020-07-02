@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+
+{% load static %}
+
+{% block content %}
+
+<h2>Delete</h2>
+<form method="post">{% csrf_token %}
+    Are you sure you want to delete "{{ object }}" ?
+    <input type="submit" value="Yes" /><a href="{% url 'nutritional_information_list'  %}">
+        <h2><span class="badge badge-success">Cancel</span></h2>
+                                </a>
+</form>
+{% endblock content %}

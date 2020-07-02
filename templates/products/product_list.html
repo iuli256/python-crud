@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+
+{% load static %}
+
+{% block content %}
+
+
+    <div class="container-fluid">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header" style="font-size: 1.1rem;"><i class="fa fa-align-justify"></i> List of
+                            all products available on the system
+                        </div>
+                        <div class="card-body" style="overflow: auto;  max-height: 65vh;">
+                            <form method="post">{% csrf_token %}
+                                <div class="alert alert-primary">
+                                <div class="row">
+                                    <div class="colM-4">
+                                        <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text" id="">Product Name</span>
+                                          </div>
+                                          <input type="text" class="form-control" name="product" value="{% if product_name %}{{ product_name }}{% endif %}">
+                                        </div>
+                                    </div>
+                                    <div class="colM-4">
+                                        <div class="input-group mb-3">
+                                          <div class="input-group-prepend">
+                                            <label class="input-group-text" for="inputGroupSelect01">Status</label>
+                                          </div>
+                                          <select class="custom-select" name="status">
+                                            <option value="0" {% if status == '0' %}selected{% endif %}>ALL</option>
+                                            <option value="ACTIVE" {% if status == 'ACTIVE' %}selected{% endif %}>ACTIVE</option>
+                                            <option value="INACTIVE" {% if status == 'INACTIVE' %}selected{% endif %}>INACTIVE</option>
+                                          </select>
+                                        </div>
+                                    </div>
+                                    <div class="colM-4">
+                                        <div class="input-group mb-3">
+                                          <div class="input-group-prepend">
+                                            <button class="btn btn-outline-secondary" type="submit">Filter</button>
+                                            <a class="btn btn-outline-secondary" href="{%  url 'product_list' %}">Clear Filter</a>
+                                          </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </form>
+                            <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                                <thead>
+                                <tr>
+                                    <th>Nr. Crt.</th>
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>Nutritional Vlue</th>
+                                    <th>Status</th>
+                                    <th><a href="{% url 'product_new'  %}">
+                                                <span class="badge badge-success">Add</span>
+                                            </a></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {% for doc in object_list %}
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ doc.name }}</td>
+                                        <td>{{ doc.description }}</td>
+                                        <td>
+                                                <table class="table table-responsive-sm table-bordered table-striped table-sm">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Type</th>
+                                                        <th>Value</th>
+                                                        <th><a href="{% url 'nutritional_values_new' pId=doc.id   %}">
+                                                                    <span class="badge badge-success">Add</span>
+                                                                </a></th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for nv in doc.nutritionalvalues %}
+                                                        <tr>
+                                                            <td>{{ nv.nutritional_type }}</td>
+                                                            <td>{{ nv.nutritional_value }}</td>
+                                                            <td><a href="{% url 'nutritional_values_edit' pk=nv.id %}">
+                                                                    <span class="badge badge-info">Edit</span>
+                                                                </a>
+                                                                <a href="{% url 'nutritional_values_delete' pk=nv.id %}">
+                                                                    <span class="badge badge-danger">Delete</span>
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                        {% empty %}
+                                                        <tr>
+                                                            <td colspan="4" style="text-align: center;"><h4>No record</h4></td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                        </td>
+                                        <td>{{ doc.status }}</td>
+                                        <td><a href="{% url 'product_edit' pk=doc.id %}">
+                                                <span class="badge badge-info">Edit</span>
+                                            </a>
+                                            <a href="{% url 'product_delete' pk=doc.id %}">
+                                                <span class="badge badge-danger">Delete</span>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="6" style="text-align: center;"><h4>No record</h4></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <nav>
+                                <ul class="pagination">
+                                    <li class="page-item"><a class="page-link" href="#">Prev</a></li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>       <!-- /.col-->     </div>
+        </div>
+    </div>
+
+{% endblock content %}
